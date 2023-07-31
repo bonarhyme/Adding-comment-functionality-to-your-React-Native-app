@@ -1,12 +1,28 @@
+
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { SafeAreaView, StyleSheet, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { useAuthentication } from './hooks/useAuthentication';
+import AppNavigator from './navigators/homeNavigator';
+import { AppTabNavigation } from './navigators/appTabNavigator';
+import AuthNavigator from './navigators/authNavigator';
+
 
 export default function App() {
+  const { user } = useAuthentication();
+  const isLoggedIn = Boolean(user);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === 'android' ? '10%' : '10%' }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? -64 : 0}
+        style={{ flex: 1 }}
+      >
+        <StatusBar style="auto" />
+        {isLoggedIn ? <AppTabNavigation /> : <AuthNavigator />}
+      </KeyboardAvoidingView>
+    </SafeAreaView >
   );
 }
 
